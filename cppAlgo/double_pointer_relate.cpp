@@ -60,7 +60,7 @@ ListNode* getItemPos(ListNode *head, int k) {
 	while (k-- > 0) {	//fast先走k步
 		fast = fast->next;
 	}
-	
+
 	while (fast->next != nullptr) {
 		fast = fast->next;
 		slow = slow->next;
@@ -137,6 +137,44 @@ void reverse(int num[]) {
 void slidingWindow(string s, string t) {
 	unordered_map<char, int> need, window;
 	for (auto c : s) need[c]++;
+	//...
 }
+
+
+string minWindow(string S, string T) {
+	unordered_map<char, int> need, window;
+	for (auto c : T) need[c]++;  //统计不同字符的个数
+
+	int left = 0, right = 0;
+	int valid = 0;
+	int start = 0, len = INT_MAX;
+
+	while (right < S.size()) {
+		char c = S[right];
+		right++;  //right右移 扩大window
+		if (need.count(c)) {
+			window[c]++;
+			if (window[c] == need[c])  valid++;
+		}
+
+		while (valid == need.size()) {  //满足缩小window的条件
+			if (right - left < len) {
+				start = left;
+				len = right - left;
+			}
+			//缩小并更新window内容
+			char d = S[left];
+			left++;	//left右移 缩小window
+			if (need.count(d)) {
+				if (window[d] == need[d]) valid--;
+				window[d]--;
+			}
+		}
+	}
+
+	return len == INT_MAX ? "" : S.substr(start, len);
+}
+
+
 
 
